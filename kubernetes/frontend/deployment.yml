@@ -24,7 +24,7 @@ spec:
         # ports
         ports:
         - name: http
-          containerPort: 8000
+          containerPort: 80
 
         # config
         envFrom:
