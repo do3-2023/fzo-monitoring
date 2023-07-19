@@ -1,8 +1,8 @@
 FROM denoland/deno:alpine-1.34.3 as builder
 
 WORKDIR /target
-COPY main.ts /target/main.ts
-RUN deno bundle main.ts main.bundle.ts
+COPY . /target/
+RUN deno bundle --no-check main.ts main.bundle.ts
 
 
 FROM denoland/deno:distroless-1.34.3 as runner
