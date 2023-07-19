@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: fzo-backend
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        # image
+        image: ghcr.io/do3-2023/fzo-kube/api:latest
+        imagePullPolicy: Always
+
+        # ports
+        ports:
+        - name: http
+          containerPort: 80
+
+        # config
+        envFrom:
+          - configMapRef:
+              name: database
+        
+        env:
+          - name: DB_PWD
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: password
+
+        # probes
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          failureThreshold: 5
+
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          failureThreshold: 2
+        
+        # resource limits
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
