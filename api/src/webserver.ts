@@ -5,9 +5,7 @@ import {
   Status,
 } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 
-import {
-  randomItem
-} from "https://deno.land/x/random_item/mod.ts";
+import { randomItem } from "https://deno.land/x/random_item/mod.ts";
 
 import { Database } from "./db.ts";
 
@@ -28,7 +26,7 @@ export class WebServer {
   init() {
     // Add the routes
     this.router
-      .get('/', this.hello.bind(this))
+      .get("/", this.hello.bind(this))
       .post("/word", this.createWord.bind(this))
       .get("/word", this.getRandomWord.bind(this))
       .get("/healthz", this.getHealth.bind(this));
@@ -42,8 +40,8 @@ export class WebServer {
     await this.app.listen(`${address}:${port}`);
   }
 
-  async hello(ctx: RouterContext<"/">) {
-    ctx.response.body = "Hello!"
+  hello(ctx: RouterContext<"/">) {
+    ctx.response.body = "Hello!";
   }
 
   async createWord(ctx: RouterContext<"/word">) {

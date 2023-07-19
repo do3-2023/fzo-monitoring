@@ -1,5 +1,4 @@
-
 export type Word = {
-    id: number;
-    name: string;
-}
+  id: number;
+  name: string;
+};
