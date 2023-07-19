@@ -76,7 +76,12 @@ export class WebServer {
     }
   }
 
-  getHealth(ctx: RouterContext<"/healthz">) {
-    ctx.response.body = "Healthy";
+  async getHealth(ctx: RouterContext<"/healthz">) {
+    if (await this.db.checkConnectivity()) {
+      ctx.response.body = "Healthy";
+    } else {
+      ctx.response.body = "Unhealthy";
+      ctx.response.status = Status.ServiceUnavailable;
+    }
   }
 }

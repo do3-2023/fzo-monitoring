@@ -43,4 +43,13 @@ export class Database {
         FROM word
     `;
   }
+
+  async checkConnectivity() {
+    try {
+      await this.sql`SELECT 1 FROM word`;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
