@@ -39,6 +39,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
           failureThreshold: 5
+
         readinessProbe:
           httpGet:
             path: /healthz
@@ -46,6 +47,8 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
           failureThreshold: 2
+        
+        # resource limits
         resources:
           limits:
             cpu: "500m"

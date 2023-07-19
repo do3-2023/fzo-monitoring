@@ -21,8 +21,8 @@ export class Config {
     }
 
     // Get the configuration
-    this.httpServerAddress = Deno.env.get("ADDR") || "127.0.0.1";
-    this.httpServerPort = Deno.env.get("PORT") || 8080;
+    this.httpServerAddress = Deno.env.get("ADDR") || "0.0.0.0";
+    this.httpServerPort = Deno.env.get("PORT") || 80;
 
     this.databaseUrl = Deno.env.get("DB_URL");
     this.databaseUser = Deno.env.get("DB_USER");
