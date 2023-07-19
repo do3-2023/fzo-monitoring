@@ -1,15 +1,10 @@
-FROM denoland/deno:alpine-1.34.3 as builder
+FROM python:3.8-slim-buster
 
-WORKDIR /target
-COPY . /target/
-RUN deno bundle --no-check main.ts main.bundle.ts
+WORKDIR /app
 
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-FROM denoland/deno:distroless-1.34.3 as runner
+COPY . .
 
-WORKDIR /target
-COPY --from=builder /target/main.bundle.ts .
-
-LABEL org.opencontainers.image.source="https://github.com/do3-2023/fzo-kube"
-
-CMD ["run", "--allow-net", "main.bundle.ts"]
+CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0"]
