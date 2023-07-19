@@ -1,0 +1,18 @@
+
+services:
+  db:
+    image: postgres:15-alpine3.18
+    container_name: fzo-kube-db
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.db_data:/var/lib/postgresql/data:rw
+    healthcheck:
+      test: /usr/local/bin/pg_isready -U api -d words_api
+      interval: 5s
+      timeout: 10s
+      retries: 4
+    environment:
+      POSTGRES_DB: words_api
+      POSTGRES_USER: api
+      POSTGRES_PASSWORD: api
