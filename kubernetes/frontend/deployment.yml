@@ -1,27 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fzo-frontend
+  name: frontend
   namespace: fzo-frontend
   labels:
-    app: fzo-frontend
+    app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fzo-frontend
+      app: frontend
   template:
     metadata:
       labels:
-        app: fzo-frontend
+        app: frontend
     spec:
       containers:
       - name: frontend
+        # image
         image: ghcr.io/do3-2023/fzo-kube/frontend:latest
         imagePullPolicy: Always
+
+        # ports
         ports:
         - name: http
           containerPort: 8000
+
+        # config
+        envFrom:
+          - configMapRef:
+              name: frontend
+
+        # probes
         livenessProbe:
           httpGet:
             path: /healthz
@@ -36,3 +46,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
           failureThreshold: 2
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "128Mi"
