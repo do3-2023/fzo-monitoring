@@ -26,23 +26,20 @@ export class Database {
 
     // Create the table
     await this.sql`
-        CREATE TABLE IF NOT EXISTS word (
-                                            id SERIAL,
-                                            name VARCHAR(255) NOT NULL
-        );
+        CREATE TABLE IF NOT EXISTS word (name VARCHAR(255) UNIQUE NOT NULL);
     `;
   }
 
   async createWord(word: Word) {
     await this.sql`
-        INSERT INTO city(id, word)
-        VALUES (${word.id}, ${word.name})
+        INSERT INTO word(name)
+        VALUES (${word.name})
     `;
   }
 
   getWords() {
     return this.sql`
-        SELECT id, name
+        SELECT name
         FROM word
     `;
   }
