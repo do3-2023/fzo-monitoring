@@ -4,5 +4,5 @@ metadata:
   name: database
   namespace: fzo-backend
 data:
-  DB_URL: "database.fzo-data.svc.cluster.local"
+  DB_URL: "postgres://database.fzo-data.svc.cluster.local"
   DB_USER: "myawesomeuser"
