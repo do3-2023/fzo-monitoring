@@ -4,18 +4,18 @@
 
     <h1>Timestamps!</h1>
 
-    <p>Current time is: {{ utcnow }}</p>
+    <p>Current UTC time is: {{ utcnow }}</p>
 
-    <h2>Previous page requests list:</h2>
 
     {% if hasTimestamps %}
+        <h2>Previous page requests list:</h2>
         <ul>
             {%- for t in timestamps %}
                 <li>{{ t -}}</li>
             {% endfor %}
         </ul>
     {% else %}
-
+        <h2>You are the first one to come here!</h2>
     {% endif %}
 
 {% endblock %}

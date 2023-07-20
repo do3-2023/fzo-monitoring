@@ -32,7 +32,7 @@ def hello_world():
         body = result.json()
 
         if result.status_code >= 200 and result.status_code < 400:
-            return render_template('index.html', hasTimestamps=body, timestamps=[
+            return render_template('index.html', hasTimestamps=len(body) > 0, timestamps=[
                 datetime.fromisoformat(e['timestamp']).strftime('%d/%m/%Y %H:%M:%S %z')
                 for e in body
             ], utcnow=datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S %z'))

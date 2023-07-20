@@ -28,7 +28,7 @@ export class Database {
 
     // Create the table
     await this.sql`
-        CREATE TABLE IF NOT EXISTS time (timestamp TIMESTAMP UNIQUE NOT NULL);
+        CREATE TABLE IF NOT EXISTS time (timestamp TIMESTAMP WITH TIME ZONE UNIQUE NOT NULL);
     `;
   }
 
