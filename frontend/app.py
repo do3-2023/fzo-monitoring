@@ -29,11 +29,12 @@ respond_text_plain = lambda txt, code: (txt, code, {'Content-Type': 'text/plain;
 def hello_world():
     try:
         result = r.get(f'{API_ENDPOINT}/', timeout=3)
+        body = result.json()
 
         if result.status_code >= 200 and result.status_code < 400:
-            return render_template('index.html', hasTimestamps=result, timestamps=[
-                datetime.fromisoformat(e).strftime('%d/%m/%Y %H:%M:%S %z')
-                for e in result
+            return render_template('index.html', hasTimestamps=body, timestamps=[
+                datetime.fromisoformat(e['timestamp']).strftime('%d/%m/%Y %H:%M:%S %z')
+                for e in body
             ], utcnow=datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S %z'))
         else:
             return render_template('error.html')

@@ -41,7 +41,7 @@ export class WebServer {
 
     try {
       await this.db.createTimestamp({
-        timestamp: new Date(new Date().toUTCString()).getTime()
+        timestamp: Date.now()
       });
     } catch (e) {}
 
