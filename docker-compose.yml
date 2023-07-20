@@ -8,11 +8,11 @@ services:
     volumes:
       - ./.db_data:/var/lib/postgresql/data:rw
     healthcheck:
-      test: /usr/local/bin/pg_isready -U api -d words_api
+      test: /usr/local/bin/pg_isready -U api -d time_api
       interval: 5s
       timeout: 10s
       retries: 4
     environment:
-      POSTGRES_DB: words_api
+      POSTGRES_DB: time_api
       POSTGRES_USER: api
       POSTGRES_PASSWORD: api

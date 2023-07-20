@@ -7,7 +7,7 @@ const config = new Config();
 config.initFromEnv();
 
 // Connect to the database
-const db = new Database(config.databaseUrl, {
+const db = new Database(config.databaseUrl, config.databaseDatabase, {
   username: config.databaseUser,
   password: config.databasePassword,
 });

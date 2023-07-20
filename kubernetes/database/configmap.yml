@@ -5,4 +5,4 @@ metadata:
   namespace: fzo-data
 data:
   username: "myawesomeuser"
-  database: "words_api"
+  database: "time_api"

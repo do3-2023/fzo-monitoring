@@ -5,8 +5,6 @@ import {
   Status,
 } from "https://deno.land/x/oak@v12.4.0/mod.ts";
 
-import { randomItem } from "https://deno.land/x/random_item/mod.ts";
-
 import { Database } from "./db.ts";
 
 export class WebServer {
@@ -26,9 +24,7 @@ export class WebServer {
   init() {
     // Add the routes
     this.router
-      .get("/", this.hello.bind(this))
-      .post("/word", this.createWord.bind(this))
-      .get("/word", this.getRandomWord.bind(this))
+      .get("/", this.timestamp.bind(this))
       .get("/healthz", this.getHealth.bind(this));
 
     this.app.use(this.router.routes());
@@ -40,40 +36,16 @@ export class WebServer {
     await this.app.listen(`${address}:${port}`);
   }
 
-  hello(ctx: RouterContext<"/">) {
-    ctx.response.body = "Hello!";
-  }
+  async timestamp(ctx: RouterContext<"/">) {
+    const lastTimestamps = await this.db.getLastFiveTimestamps();
 
-  async createWord(ctx: RouterContext<"/word">) {
-    const body = await ctx.request.body({ type: "json" });
-    const value = await body.value;
+    try {
+      await this.db.createTimestamp({
+        timestamp: new Date(new Date().toUTCString()).getTime()
+      });
+    } catch (e) {}
 
-    if (!value) {
-      ctx.response.status = Status.BadRequest;
-      ctx.response.body = "Missing request body";
-
-      return;
-    }
-
-    if (!value.name) {
-      ctx.response.status = Status.BadRequest;
-      ctx.response.body = "Missing name";
-
-      return;
-    }
-
-    // FIXME: will return 500 if unique key constraint violation
-    await this.db.createWord(value);
-    ctx.response.status = Status.Created;
-  }
-
-  async getRandomWord(ctx: RouterContext<"/word">) {
-    const words = await this.db.getWords();
-    if (words.length == 0) {
-      ctx.response.body = [];
-    } else {
-      ctx.response.body = randomItem(words);
-    }
+    ctx.response.body = lastTimestamps;
   }
 
   async getHealth(ctx: RouterContext<"/healthz">) {

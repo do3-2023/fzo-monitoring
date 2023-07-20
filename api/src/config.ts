@@ -5,6 +5,7 @@ export class Config {
   public databaseUrl: string;
   public databaseUser: string;
   public databasePassword: string;
+  public databaseDatabase: string;
 
   initFromEnv() {
     // Ensure mandatory variables are present
@@ -20,6 +21,10 @@ export class Config {
       throw new Error("Please set the DB_PWD environment variable.");
     }
 
+    if (!Deno.env.has("DB_DB")) {
+      throw new Error("Please set the DB_DB environment variable.");
+    }
+
     // Get the configuration
     this.httpServerAddress = Deno.env.get("ADDR") || "0.0.0.0";
     this.httpServerPort = Deno.env.get("PORT") || 80;
@@ -27,5 +32,6 @@ export class Config {
     this.databaseUrl = Deno.env.get("DB_URL");
     this.databaseUser = Deno.env.get("DB_USER");
     this.databasePassword = Deno.env.get("DB_PWD");
+    this.databaseDatabase = Deno.env.get("DB_DB");
   }
 }

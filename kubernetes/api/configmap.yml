@@ -6,3 +6,4 @@ metadata:
 data:
   DB_URL: "postgres://database.fzo-data.svc.cluster.local"
   DB_USER: "myawesomeuser"
+  DB_DB: "time_api"
