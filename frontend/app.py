@@ -2,6 +2,7 @@ from os import getenv
 from flask import Flask, render_template
 import requests as r
 from requests.exceptions import ConnectionError
+from datetime import datetime
 
 
 # -------------------
@@ -26,7 +27,19 @@ respond_text_plain = lambda txt, code: (txt, code, {'Content-Type': 'text/plain;
 # -------------------
 @app.route('/')
 def hello_world():
-    return render_template('index.html')
+    try:
+        result = r.get(f'{API_ENDPOINT}/', timeout=3)
+
+        if result.status_code >= 200 and result.status_code < 400:
+            return render_template('index.html', hasTimestamps=result, timestamps=[
+                datetime.fromisoformat(e).strftime('%d/%m/%Y %H:%M:%S %z')
+                for e in result
+            ], utcnow=datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S %z'))
+        else:
+            return render_template('error.html')
+
+    except (TimeoutError, ConnectionError):
+        return render_template('error.html')
 
 @app.route('/healthz')
 def healthz():

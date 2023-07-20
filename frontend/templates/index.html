@@ -2,6 +2,20 @@
 
 {% block container %}
 
-    <h2>Hello world!</h2>
+    <h1>Timestamps!</h1>
+
+    <p>Current time is: {{ utcnow }}</p>
+
+    <h2>Previous page requests list:</h2>
+
+    {% if hasTimestamps %}
+        <ul>
+            {%- for t in timestamps %}
+                <li>{{ t -}}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+
+    {% endif %}
 
 {% endblock %}
