@@ -16,6 +16,11 @@ spec:
       labels:
         app: database
     spec:
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: database-volume-claim
+
       containers:
       - name: database
         # image
