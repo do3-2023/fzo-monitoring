@@ -1,10 +1,13 @@
 name: Publish latest API image
 
-on: [ push ]
+on:
+  push:
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/fzo-kube/api
+  IMAGE_NAME: ${{ github.repository_owner }}/fzo-monitoring/api
 
 jobs:
   build:
@@ -34,7 +37,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            latest
+            ${{ github.ref_name }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
