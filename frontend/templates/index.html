@@ -2,20 +2,28 @@
 
 {% block container %}
 
-    <h1>Timestamps!</h1>
+    <script>
+        async function add(button) {
+            await fetch(button.getAttribute("endpoint") + '/', {method: 'POST'});
+            location.reload();
+        }
+    </script>
 
-    <p>Current UTC time is: {{ utcnow }}</p>
+    <h1>People!</h1>
 
-
-    {% if hasTimestamps %}
-        <h2>Previous page requests list:</h2>
+    {% if hasPeople %}
+        <h2>People registered:</h2>
         <ul>
-            {%- for t in timestamps %}
-                <li>{{ t -}}</li>
+            {%- for p in people %}
+                <li>{{ p -}}</li>
             {% endfor %}
         </ul>
     {% else %}
-        <h2>You are the first one to come here!</h2>
+        <h2>There are no people registered!</h2>
     {% endif %}
+
+    <button onclick="add(this)" endpoint={{ endpoint }}>
+        Add a new person
+    </button>
 
 {% endblock %}
