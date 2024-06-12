@@ -24,7 +24,8 @@ export class WebServer {
   init() {
     // Add the routes
     this.router
-      .get("/", this.timestamp.bind(this))
+      .get("/", this.getAll.bind(this))
+      .post("/", this.addNew.bind(this))
       .get("/healthz", this.getHealth.bind(this));
 
     this.app.use(this.router.routes());
@@ -36,16 +37,17 @@ export class WebServer {
     await this.app.listen(`${address}:${port}`);
   }
 
-  async timestamp(ctx: RouterContext<"/">) {
-    const lastTimestamps = await this.db.getLastFiveTimestamps();
+  async getAll(ctx: RouterContext<"/">) {
+    ctx.response.body = await this.db.getAll();
+  }
 
-    try {
-      await this.db.createTimestamp({
-        timestamp: Date.now()
-      });
-    } catch (e) {}
-
-    ctx.response.body = lastTimestamps;
+  async addNew(ctx: RouterContext<"/">) {
+    await this.db.create({
+      last_name: "Test",
+      phone_number: "0612345678",
+      location: "Montpellier"
+    });
+    ctx.response.body = "OK";
   }
 
   async getHealth(ctx: RouterContext<"/healthz">) {

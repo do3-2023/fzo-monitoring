@@ -1,5 +1,5 @@
 import postgres from "https://deno.land/x/postgresjs@v3.3.4/mod.js";
-import { Timestamp } from "./types/timestamp.ts";
+import { Person } from "./types/person.ts";
 
 export type DatabaseOptions = {
   username: string;
@@ -25,32 +25,22 @@ export class Database {
       ...this.options,
       database: this.database_name,
     });
+  }
 
-    // Create the table
+  async create(person: Person) {
     await this.sql`
-        CREATE TABLE IF NOT EXISTS time (timestamp TIMESTAMP WITH TIME ZONE UNIQUE NOT NULL);
+        INSERT INTO person(last_name, phone_number, location)
+        VALUES (${person.last_name}, ${person.phone_number}, ${person.location})
     `;
   }
 
-  async createTimestamp(timestamp: Timestamp) {
-    await this.sql`
-        INSERT INTO time(timestamp)
-        VALUES (${timestamp.timestamp})
-    `;
-  }
-
-  getLastFiveTimestamps() {
-    return this.sql`
-        SELECT timestamp
-        FROM time
-        ORDER BY timestamp DESC
-        LIMIT 5
-    `;
+  getAll() {
+    return this.sql`SELECT * FROM person`;
   }
 
   async checkConnectivity() {
     try {
-      await this.sql`SELECT 1 FROM time`;
+      await this.sql`SELECT 1 FROM person`;
       return true;
     } catch (e) {
       return false;

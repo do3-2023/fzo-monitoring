@@ -6,13 +6,16 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./.db_data:/var/lib/postgresql/data:rw
+      - db_data:/var/lib/postgresql/data:rw
     healthcheck:
-      test: /usr/local/bin/pg_isready -U api -d time_api
+      test: /usr/local/bin/pg_isready -U api -d people
       interval: 5s
       timeout: 10s
       retries: 4
     environment:
-      POSTGRES_DB: time_api
+      POSTGRES_DB: people
       POSTGRES_USER: api
       POSTGRES_PASSWORD: api
+
+volumes:
+  db_data:
