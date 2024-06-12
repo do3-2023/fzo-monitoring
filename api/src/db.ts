@@ -21,7 +21,7 @@ export class Database {
 
   async init() {
     // Connect to the database
-    this.sql = postgres(this.url, {
+    this.sql = postgres('postgres://' + this.url, {
       ...this.options,
       database: this.database_name,
     });
