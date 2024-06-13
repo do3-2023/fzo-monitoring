@@ -6,4 +6,4 @@ metadata:
 data:
   DB_URL: "database.fzo-data.svc.cluster.local"
   DB_USER: "myawesomeuser"
-  DB_DB: "time_api"
+  DB_DB: "people"

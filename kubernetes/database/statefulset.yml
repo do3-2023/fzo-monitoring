@@ -40,17 +40,17 @@ spec:
                 name: database
                 key: username
           - name: POSTGRESQL_DATABASE
-            valueFrom:
-              configMapKeyRef:
-                name: database
-                key: database
+            value: "people"
           - name: POSTGRESQL_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: database
                 key: password
           - name: POSTGRESQL_POSTGRES_PASSWORD
-            value: ".8Ftu296qAekrYbA4.xKWeuZ7XTLv9!Zu54aguXU"       
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: root_password
 
         # probes
         livenessProbe:
@@ -58,7 +58,7 @@ spec:
             command:
               - /bin/sh
               - -c
-              - exec pg_isready -U postgres -d words_api
+              - exec pg_isready -U postgres -d people
           initialDelaySeconds: 5
           periodSeconds: 3
           failureThreshold: 5
@@ -68,7 +68,7 @@ spec:
             command:
               - /bin/sh
               - -c
-              - exec pg_isready -U postgres -d words_api
+              - exec pg_isready -U postgres -d people
           initialDelaySeconds: 5
           periodSeconds: 3
           failureThreshold: 2

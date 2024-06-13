@@ -15,10 +15,35 @@ spec:
       labels:
         app: api
     spec:
+      initContainers:
+      - name: init-migrations
+        image: ghcr.io/do3-2023/fzo-monitoring/migrations:v1
+        env:
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: password
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: database
+                key: DB_URL
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: database
+                key: DB_USER
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: database
+                key: DB_DB
+
       containers:
       - name: api
         # image
-        image: ghcr.io/do3-2023/fzo-kube/api:latest
+        image: ghcr.io/do3-2023/fzo-monitoring/api:v1
         imagePullPolicy: Always
 
         # ports
