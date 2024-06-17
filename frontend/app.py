@@ -26,18 +26,32 @@ respond_text_plain = lambda txt, code: (txt, code, {'Content-Type': 'text/plain;
 # ROUTES
 # -------------------
 @app.route('/')
-def hello_world():
+def homepage():
     try:
         result = r.get(f'{API_ENDPOINT}/', timeout=3)
         body = result.json()
 
         if result.status_code >= 200 and result.status_code < 400:
-            return render_template('index.html', hasPeople=len(body) > 0, people=body, endpoint=API_ENDPOINT)
+            return render_template('index.html', hasPeople=len(body) > 0, people=body)
         else:
             return render_template('error.html')
 
-    except (TimeoutError, ConnectionError):
+    except (TimeoutError, ConnectionError, r.exceptions.ReadTimeout):
         return render_template('error.html')
+
+@app.route('/', methods = ['POST'])
+def create_person():
+    try:
+        result = r.post(f'{API_ENDPOINT}/', timeout=3)
+        body = result.text
+
+        if result.status_code >= 200 and result.status_code < 400:
+            return respond_text_plain(body, 200)
+        else:
+            return respond_text_plain('NOK', result.status_code)
+
+    except (TimeoutError, ConnectionError, r.exceptions.ReadTimeout):
+        return respond_text_plain('NOK', 503)
 
 @app.route('/healthz')
 def healthz():
@@ -49,5 +63,5 @@ def healthz():
         else:
             return respond_text_plain('unhealthy', 503)
 
-    except (TimeoutError, ConnectionError):
+    except (TimeoutError, ConnectionError, r.exceptions.ReadTimeout):
         return respond_text_plain('unhealthy', 503)

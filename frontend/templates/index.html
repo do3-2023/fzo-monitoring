@@ -3,8 +3,8 @@
 {% block container %}
 
     <script>
-        async function add(button) {
-            await fetch(button.getAttribute("endpoint") + '/', {method: 'POST'});
+        async function add() {
+            await fetch('/', {method: 'POST'});
             location.reload();
         }
     </script>
@@ -22,7 +22,7 @@
         <h2>There are no people registered!</h2>
     {% endif %}
 
-    <button onclick="add(this)" endpoint={{ endpoint }}>
+    <button onclick="add()">
         Add a new person
     </button>
 
