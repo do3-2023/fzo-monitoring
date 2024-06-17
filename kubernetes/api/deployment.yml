@@ -17,7 +17,8 @@ spec:
     spec:
       initContainers:
       - name: init-migrations
-        image: ghcr.io/do3-2023/fzo-monitoring/migrations:v1
+        image: ghcr.io/do3-2023/fzo-monitoring/migrations:v1.1
+        imagePullPolicy: Always
         env:
           - name: DB_PASSWORD
             valueFrom:
@@ -39,6 +40,10 @@ spec:
               configMapKeyRef:
                 name: database
                 key: DB_DB
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
 
       containers:
       - name: api
