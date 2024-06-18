@@ -29,8 +29,8 @@ export class Database {
 
   async create(person: Person) {
     await this.sql`
-        INSERT INTO person(last_name, phone_number, location)
-        VALUES (${person.last_name}, ${person.phone_number}, ${person.location})
+        INSERT INTO person(last_name, phone_number)
+        VALUES (${person.last_name}, ${person.phone_number})
     `;
   }
 

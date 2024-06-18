@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
       - name: init-migrations
-        image: ghcr.io/do3-2023/fzo-monitoring/migrations:v2
+        image: ghcr.io/do3-2023/fzo-monitoring/migrations:v3
         imagePullPolicy: Always
         env:
           - name: DB_PASSWORD
@@ -48,7 +48,7 @@ spec:
       containers:
       - name: api
         # image
-        image: ghcr.io/do3-2023/fzo-monitoring/api:v2
+        image: ghcr.io/do3-2023/fzo-monitoring/api:v3
         imagePullPolicy: Always
 
         # ports

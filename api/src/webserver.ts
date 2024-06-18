@@ -43,9 +43,8 @@ export class WebServer {
 
   async addNew(ctx: RouterContext<"/">) {
     await this.db.create({
-      last_name: "Doe",
+      last_name: "Notch",
       phone_number: "0612345678",
-      location: "Marseille"
     });
     ctx.response.body = "OK";
   }
