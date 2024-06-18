@@ -18,7 +18,7 @@ spec:
       containers:
       - name: frontend
         # image
-        image: ghcr.io/do3-2023/fzo-monitoring/frontend:v1
+        image: ghcr.io/do3-2023/fzo-monitoring/frontend:v1.1.1
         imagePullPolicy: Always
 
         # ports
