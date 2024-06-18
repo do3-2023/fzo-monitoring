@@ -35,7 +35,7 @@ export class Database {
   }
 
   getAll() {
-    return this.sql`SELECT * FROM person`;
+    return this.sql`SELECT id, last_name, phone_number FROM person`;
   }
 
   async checkConnectivity() {

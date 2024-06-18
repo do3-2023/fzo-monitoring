@@ -1,0 +1,1 @@
+ALTER TABLE person ALTER COLUMN location SET NOT NULL;
