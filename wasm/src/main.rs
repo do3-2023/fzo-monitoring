@@ -28,13 +28,15 @@ async fn echo(req: Request<Body>, client: Arc<Mutex<Client>>) -> Result<Response
             Ok(Response::new(Body::from(serde_json::to_string(&results).unwrap())))
         },
 
-        (&Method::POST, "/hello") => {
-            let name = hyper::body::to_bytes(req.into_body()).await?;
-            let name_string = String::from_utf8(name.to_vec()).unwrap();
+        (&Method::POST, "/") => {
+            let guard = client.lock().await;
 
-            let answer = format!("{}{}", "👋 Hello ".to_owned(), name_string);
+            guard.execute(
+                "INSERT INTO person (last_name, phone_number) VALUES ($1, $2)",
+                &[&String::from("WASM"), &String::from("0987654321")]
+            ).await.unwrap();
 
-            Ok(Response::new(Body::from(answer)))
+            Ok(Response::new(Body::from("OK")))
         }
 
         _ => {
