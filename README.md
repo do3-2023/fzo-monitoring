@@ -12,7 +12,7 @@ For this assignment, a node port is needed, so you can run this command:
 $ k3d cluster create mycluster -p "8082:30080@agent:0" --agents 2
 ```
 
-This will created a cluster exposing a potential `NodePort` on port 30080, mapped to the host's port 8082.
+This will create a cluster exposing a potential `NodePort` on port 30080, mapped to the host's port 8082.
 
 ## Application
 
@@ -30,11 +30,6 @@ Technologies used:
 ## Deployment
 
 The images are built using Github Actions and stored in the Github Container Registry (ghcr).
-
-Images are available here:
-
-- frontend: [`ghcr.io/do3-2023/fzo-kube/frontend:latest`](https://github.com/do3-2023/fzo-kube/pkgs/container/fzo-kube%2Ffrontend)
-- api: [`ghcr.io/do3-2023/fzo-kube/api:latest`](https://github.com/do3-2023/fzo-kube/pkgs/container/fzo-kube%2Fapi)
 
 ### Description
 
