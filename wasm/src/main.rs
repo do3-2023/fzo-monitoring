@@ -3,21 +3,30 @@ mod person;
 
 use std::env::var;
 use std::net::SocketAddr;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc};
 
 use hyper::server::conn::Http;
 use hyper::service::service_fn;
 use hyper::{Body, Method, Request, Response};
 use tokio::net::TcpListener;
-use tokio_postgres::Client;
+use tokio::sync::Mutex;
+use tokio_postgres::{Client};
+use crate::person::Person;
 
 async fn echo(req: Request<Body>, client: Arc<Mutex<Client>>) -> Result<Response<Body>, hyper::Error> {
     match (req.method(), req.uri().path()) {
 
-        (&Method::GET, "/") => Ok(Response::new(Body::from(
-            "👋 Hello World 🌍",
-        ))),
+        (&Method::GET, "/") => {
+            let guard = client.lock().await;
+            let mut results: Vec<Person> = vec![];
 
+            let rows = guard.query("SELECT id, last_name, phone_number FROM person;", &[]).await.unwrap();
+            for row in rows.iter() {
+                results.push(Person::new(row.get(0), row.get(1), row.get(2)));
+            }
+
+            Ok(Response::new(Body::from(serde_json::to_string(&results).unwrap())))
+        },
 
         (&Method::POST, "/hello") => {
             let name = hyper::body::to_bytes(req.into_body()).await?;
@@ -29,7 +38,7 @@ async fn echo(req: Request<Body>, client: Arc<Mutex<Client>>) -> Result<Response
         }
 
         _ => {
-            Ok(Response::new(Body::from("😡 try again")))
+            Ok(Response::new(Body::from("404 not found")))
         }
     }
 }
@@ -43,17 +52,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let listener = TcpListener::bind(addr).await?;
     println!("Listening on http://{}", addr);
 
-    let (client, _): (Client, _) = database::connect();
+    let client = database::connect().await;
     let arc_client = Arc::new(Mutex::new(client));
 
     loop {
         let (stream, _) = listener.accept().await?;
 
+        let arc = arc_client.clone();
         tokio::task::spawn(async move {
 
             let server = Http::new()
                 .serve_connection(stream,
-                                  service_fn(move |req| echo(req, Arc::clone(&arc_client))));
+                                  service_fn(move |req| echo(req, Arc::clone(&arc))));
 
             if let Err(err) = server.await {
                 println!("Error serving connection: {:?}", err);

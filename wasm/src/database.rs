@@ -1,16 +1,23 @@
 use std::env::var;
-use tokio_postgres::{NoTls, Error, Client, Connection, Socket};
-use tokio_postgres::tls::NoTlsStream;
+use tokio_postgres::{NoTls, Client};
 
-fn get_url() -> String {
-    let url = var("DB_URL").map_err(|| panic!("No database URL found"))?;
-    let user = var("DB_USER").map_err(|| panic!("No database user"))?;
-    let password = var("DB_PASSWORD").map_err(|| panic!("No database password"))?;
-    let database = var("DB_DATABASE").map_err(|| panic!("No database specified"))?;
+pub fn get_url() -> String {
+    let url = var("DB_URL").map_err(|_| panic!("No database URL found")).unwrap();
+    let user = var("DB_USER").map_err(|_| panic!("No database user")).unwrap();
+    let password = var("DB_PASSWORD").map_err(|_| panic!("No database password")).unwrap();
+    let database = var("DB_DATABASE").map_err(|_| panic!("No database specified")).unwrap();
 
     format!("postgres://{}:{}@{}/{}", user, password, url, database)
 }
 
-pub async fn connect() -> (Client, Connection<Socket, NoTlsStream>) {
-    tokio_postgres::connect(&*get_url(),NoTls).await?
+pub async fn connect() -> Client {
+    let (client, connection) = tokio_postgres::connect(&*get_url(),NoTls).await.unwrap();
+
+    tokio::task::spawn(async move {
+        if let Err(e) = connection.await {
+            eprintln!("connection error: {}", e);
+        }
+    });
+
+    client
 }
